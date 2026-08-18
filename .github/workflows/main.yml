@@ -1,33 +1,37 @@
-name: Pipeline Calculadora
+name: Pipeline CI/CD Calculadora
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build-test-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Descargar código
+      - name: Descargar código del repositorio
         uses: actions/checkout@v4
 
-      - name: Configurar Python
+      - name: Configurar entorno Python 3.12
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Instalar pytest
-        run: pip install pytest
-
-      - name: Ejecutar pruebas
-        run: pytest
-
-      - name: Despliegue simulado
+      - name: Instalación y preparación de dependencias
         run: |
-          mkdir staging
-          cp app.py staging/
-          echo "Despliegue exitoso"
-          echo "Contenido de staging:"
-          ls staging
+          python -m pip install --upgrade pip
+          pip install pytest
+
+      - name: Ejecutar pruebas unitarias
+        run: pytest -v
+
+      - name: Simulación de despliegue en Staging
+        run: |
+          echo "Iniciando despliegue automatizado..."
+          mkdir -p staging_dir
+          cp -r *.py staging_dir/
+          echo "Archivos en el directorio de staging:"
+          ls -la staging_dir
+          echo "¡Despliegue simulado exitosamente!"
