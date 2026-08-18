@@ -1,0 +1,33 @@
+name: Pipeline Calculadora
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar pytest
+        run: pip install pytest
+
+      - name: Ejecutar pruebas
+        run: pytest
+
+      - name: Despliegue simulado
+        run: |
+          mkdir staging
+          cp app.py staging/
+          echo "Despliegue exitoso"
+          echo "Contenido de staging:"
+          ls staging
